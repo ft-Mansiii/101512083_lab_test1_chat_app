@@ -29,8 +29,8 @@ app.get("/", (req, res) => {
 
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() => console.log("✅ MongoDB Atlas connected"))
-  .catch((err) => console.log("❌ Mongo Error:", err.message));
+  .then(() => console.log("MongoDB Atlas connected"))
+  .catch((err) => console.log("Mongo Error:", err.message));
 
 // ------------------ REST APIs ------------------
 
@@ -127,7 +127,6 @@ io.on("connection", (socket) => {
   });
 
   
-  // TYPING (ROOM)
 socket.on("typing", ({ room, username }) => {
   if (!room) return;
   socket.to(room).emit("typing", { type: "room", room, from: username });
@@ -138,7 +137,6 @@ socket.on("stopTyping", ({ room }) => {
   socket.to(room).emit("stopTyping", { type: "room", room });
 });
 
-// TYPING (PRIVATE)
 socket.on("typingPrivate", ({ from_user, to_user }) => {
   const toSocketId = onlineUsers[to_user];
   if (toSocketId) {

@@ -1,4 +1,3 @@
-// public/main.js
 const socket = io();
 
 const username = localStorage.getItem("username");
@@ -6,12 +5,11 @@ if (!username) window.location.href = "/views/login.html";
 
 document.getElementById("who").innerText = `Logged in as: ${username}`;
 
-// ✅ register user for private messaging
 socket.emit("registerUser", username);
 
 let currentRoom = null;
 let typingTimer = null;
-let mode = "room"; // room | private
+let mode = "room"; 
 let currentPrivateUser = null;
 
 function logout() {
@@ -49,7 +47,6 @@ function joinRoom() {
 
   socket.emit("joinRoom", { room, username });
 
-  // load room history
   fetch(`/api/messages/${encodeURIComponent(room)}`)
     .then((r) => r.json())
     .then((msgs) => {
@@ -104,7 +101,6 @@ function sendMessage() {
 
     socket.emit("sendPrivate", { from_user: username, to_user: currentPrivateUser, message });
 
-    // ✅ show instantly for sender (even if receiver offline)
     addMessage(`[PRIVATE] ${username} -> ${currentPrivateUser}: ${message}`);
   }
 
@@ -125,7 +121,6 @@ function handleTyping() {
       socket.emit("stopTyping", { room: currentRoom });
     }, 600);
   } else {
-    // private typing
     if (!currentPrivateUser) return;
 
     socket.emit("typingPrivate", { from_user: username, to_user: currentPrivateUser });
@@ -136,9 +131,7 @@ function handleTyping() {
   }
 }
 
-// show typing (room or private)
 socket.on("typing", (data) => {
-  // room typing: only show if in same room
   if (data.type === "room") {
     if (currentRoom && data.room === currentRoom) {
       document.getElementById("typingText").innerText = `${data.from} is typing...`;
@@ -146,13 +139,11 @@ socket.on("typing", (data) => {
     return;
   }
 
-  // private typing
   if (data.type === "private") {
     document.getElementById("typingText").innerText = `${data.from} is typing...`;
   }
 });
 
-// stop typing (room or private)
 socket.on("stopTyping", (data) => {
   if (data.type === "room") {
     document.getElementById("typingText").innerText = "";
@@ -182,7 +173,6 @@ socket.on("systemMessage", (text) => {
 });
 
 socket.on("receivePrivate", (data) => {
-  // avoid double-print: we already printed sender-side instantly
   if (data.from_user === username) return;
   addMessage(`[PRIVATE] ${data.from_user} -> ${data.to_user}: ${data.message}`);
 });
