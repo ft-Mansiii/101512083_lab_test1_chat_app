@@ -18,22 +18,41 @@
 
   <div class="row g-3">
     <div class="col-md-4">
-      <label class="form-label">Select Room</label>
-      <select id="room" class="form-select">
-        <option value="devops">devops</option>
-        <option value="cloud computing">cloud computing</option>
-        <option value="covid19">covid19</option>
-        <option value="sports">sports</option>
-        <option value="nodeJS">nodeJS</option>
+
+      <label class="form-label">Chat Mode</label>
+      <select id="mode" class="form-select mb-3" onchange="onModeChange()">
+        <option value="room" selected>Room Chat</option>
+        <option value="private">Private (1-to-1)</option>
       </select>
 
-      <div class="mt-2 d-flex gap-2">
-        <button class="btn btn-primary w-50" onclick="joinRoom()">Join</button>
-        <button class="btn btn-secondary w-50" onclick="leaveRoom()">Leave</button>
+      <div id="roomControls">
+        <label class="form-label">Select Room</label>
+        <select id="room" class="form-select">
+          <option value="devops">devops</option>
+          <option value="cloud computing">cloud computing</option>
+          <option value="covid19">covid19</option>
+          <option value="sports">sports</option>
+          <option value="nodeJS">nodeJS</option>
+        </select>
+
+        <div class="mt-2 d-flex gap-2">
+          <button class="btn btn-primary w-50" onclick="joinRoom()">Join</button>
+          <button class="btn btn-secondary w-50" onclick="leaveRoom()">Leave</button>
+        </div>
+
+        <p class="mt-3"><b>Current Room:</b> <span id="currentRoom">None</span></p>
       </div>
 
-      <p class="mt-3"><b>Current Room:</b> <span id="currentRoom">None</span></p>
-      <p class="text-muted" id="typingText"></p>
+      <div id="privateControls" style="display:none;">
+        <label class="form-label">Send to Username</label>
+        <input id="toUser" class="form-control" placeholder="e.g., newUser" />
+        <button class="btn btn-warning w-100 mt-2" onclick="loadPrivateHistory()">Load Chat History</button>
+
+        <p class="mt-3"><b>Chatting with:</b> <span id="currentPrivate">None</span></p>
+      </div>
+
+      <p class="mt-3 text-muted" id="typingText" style="min-height: 24px;"></p>
+
     </div>
 
     <div class="col-md-8">
